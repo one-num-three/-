@@ -84,13 +84,23 @@
                 gap: 2rem;
             }
             .sidebar {
-                position: static;
-                padding: 1.5rem;
-                border-radius: 1rem;
-                order: 2; /* 移动端放在最下面 */
+                position: fixed;
+                top: 0;
+                left: -100%;
+                width: 280px;
+                height: 100vh;
+                z-index: 1000;
+                border-radius: 0;
+                transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                overflow-y: auto;
+                box-shadow: 2px 0 20px rgba(0,0,0,0.5);
+                padding: 2rem 1.5rem;
+            }
+            .sidebar.active {
+                left: 0;
             }
             .main-content {
-                order: 1; /* 移动端正文放在最上面 */
+                order: 1; /* 正文在前面 */
             }
             .section-header {
                 font-size: 1.8rem;
@@ -101,6 +111,49 @@
             .card-title {
                 font-size: 1.2rem;
             }
+            .mobile-menu-btn {
+                display: flex;
+            }
+            .overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background: rgba(0,0,0,0.5);
+                backdrop-filter: blur(4px);
+                z-index: 999;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+            .overlay.active {
+                display: block;
+                opacity: 1;
+            }
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1001;
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        .mobile-menu-btn:active {
+            transform: scale(0.95);
         }
 
         /* Sidebar & TOC */
@@ -328,6 +381,8 @@
     </style>
 </head>
 <body>
+    <div class="overlay"></div>
+    <button class="mobile-menu-btn">☰</button>
     <div class="container">
         <!-- Sidebar -->
         <aside class="sidebar">
@@ -797,6 +852,30 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+            // Mobile Menu Logic
+            const menuBtn = document.querySelector('.mobile-menu-btn');
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.overlay');
+            const tocLinks = document.querySelectorAll('.toc a');
+
+            function toggleMenu() {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            }
+
+            menuBtn.addEventListener('click', toggleMenu);
+            overlay.addEventListener('click', toggleMenu);
+            
+            // Close menu when clicking a link on mobile
+            tocLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth <= 1024) {
+                        sidebar.classList.remove('active');
+                        overlay.classList.remove('active');
+                    }
+                });
+            });
+
             // 简单的侧边栏导航高亮效果
             const sections = document.querySelectorAll('section');
             const navLinks = document.querySelectorAll('.toc a');
