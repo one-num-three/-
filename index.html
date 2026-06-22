@@ -79,8 +79,22 @@
         @media (max-width: 1024px) {
             .container {
                 grid-template-columns: 1fr;
-                padding: 2rem 1.5rem;
+                padding: 1rem 1rem;
                 gap: 2rem;
+            }
+            .sidebar {
+                position: static;
+                padding: 1.5rem;
+                border-radius: 1rem;
+            }
+            .section-header {
+                font-size: 1.8rem;
+            }
+            .card {
+                padding: 1.25rem;
+            }
+            .card-title {
+                font-size: 1.2rem;
             }
         }
 
@@ -676,7 +690,8 @@
                         <div class="card-title"><span class="icon">📋</span> 常用变换表与解题步骤</div>
                         <div class="card-content">
                             <p class="highlight-text">三、基础常用函数变换（必背）</p>
-                            <table style="width: 100%; text-align: left; margin-bottom: 1.5rem; border-collapse: collapse; font-size: 1.1em;">
+                            <div style="width: 100%; overflow-x: auto;">
+                            <table style="width: 100%; text-align: left; margin-bottom: 1.5rem; border-collapse: collapse; font-size: 1.1em; white-space: nowrap;">
                                 <thead>
                                     <tr style="border-bottom: 2px solid var(--border-color);">
                                         <th style="padding: 0.5rem;">原函数 $f(t)$</th>
@@ -718,6 +733,7 @@
                                     </tr>
                                 </tbody>
                             </table>
+                            </div>
 
                             <p class="highlight-text">八、微分方程解题固定步骤</p>
                             <div class="note" style="margin-top: 0.5rem; background: rgba(56, 189, 248, 0.1); border-color: var(--accent-color); color: var(--text-main);">
