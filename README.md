@@ -36,4 +36,6 @@
 3. 按照现有的 `<div class="card">` 格式仿写插入即可，数学公式请使用 `$$...$$` 或 `$...$` 包裹。
 
 ---
+*👤 作者：可可磨成粉 | SEU 东南大学*  
+*🌐 专属在线地址：[https://seu-link.fit/ode-review/](https://seu-link.fit/ode-review/)*  
 *祝期末考试一切顺利！💯*
