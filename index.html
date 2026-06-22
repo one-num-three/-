@@ -398,7 +398,8 @@
                 <li><a href="#systems">5. 线性微分方程组</a></li>
                 <li><a href="#power-series">6. 幂级数解法</a></li>
                 <li><a href="#laplace">7. 拉普拉斯变换</a></li>
-                <li><a href="#mistakes">8. 易错点与避坑记录</a></li>
+                <li><a href="#stability">8. 零解的稳定性判定</a></li>
+                <li><a href="#mistakes">9. 易错点与避坑记录</a></li>
             </ul>
         </aside>
 
@@ -812,9 +813,90 @@
                 </div>
             </section>
 
-            <!-- 8. 易错点与避坑记录 -->
+            <!-- 8. 零解的稳定性判定 -->
+            <section id="stability">
+                <h2 class="section-header">8. 零解的稳定性判定</h2>
+                <div class="card-grid">
+                    
+                    <div class="card">
+                        <div class="card-title"><span class="icon">🔍</span> 李雅普诺夫第二方法（直接法）</div>
+                        <div class="card-content">
+                            <p>判断系统零解稳定性的核心是一个标准化的**三步判定程序**，抛开复杂的理论推导，实战操作如下：</p>
+                            <br>
+                            <p class="highlight-text">第一步：构造正定函数 $V$（确立基准）</p>
+                            <ul>
+                                <li><strong>规则：</strong> 选取一个标量函数 $V$，满足在原点处 $V(0) = 0$，且在原点之外的任何点严格大于零（即 $V > 0$）。</li>
+                                <li><strong>实战策略：</strong> 对于二维系统 $(x,y)$，最通用、最高效的起手式通常是二次型，例如 $V(x,y) = ax^2 + by^2$ （$a,b>0$）。</li>
+                            </ul>
+
+                            <p class="highlight-text">第二步：计算全导数 $\frac{dV}{dt}$（代入系统动态）</p>
+                            <ul>
+                                <li><strong>规则：</strong> 利用链式法则，计算 $V$ 沿系统微分方程轨线的导数。</li>
+                                <li><strong>操作：</strong> 将题目给定的微分方程 $\dot{x} = f_1(x,y)$ 和 $\dot{y} = f_2(x,y)$ 代入公式 $\frac{dV}{dt} = \frac{\partial V}{\partial x}\dot{x} + \frac{\partial V}{\partial y}\dot{y}$，展开并合并同类项，化简到最简形式。</li>
+                            </ul>
+
+                            <p class="highlight-text">第三步：查表判定结论</p>
+                            <p>严格根据化简后 $\frac{dV}{dt}$ 的符号域直接得出结论（前提是 $V$ 为正定）：</p>
+                            <div style="width: 100%; overflow-x: auto;">
+                                <table style="width: 100%; text-align: left; margin-top: 1rem; border-collapse: collapse; font-size: 1.0em; white-space: nowrap;">
+                                    <thead>
+                                        <tr style="border-bottom: 2px solid var(--border-color);">
+                                            <th style="padding: 0.5rem;">$\frac{dV}{dt}$ 的符号特征</th>
+                                            <th style="padding: 0.5rem;">最终稳定性结论</th>
+                                            <th style="padding: 0.5rem;">判别说明</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr style="border-bottom: 1px solid var(--border-color);">
+                                            <td style="padding: 0.5rem; color: #ef4444;"><strong>严格恒负</strong> ($< 0$, 当 $x \neq 0$ 时)</td>
+                                            <td style="padding: 0.5rem; font-weight: bold; color: #10b981;">渐近稳定</td>
+                                            <td style="padding: 0.5rem;">解最终一定会收敛到原点。</td>
+                                        </tr>
+                                        <tr style="border-bottom: 1px solid var(--border-color);">
+                                            <td style="padding: 0.5rem; color: #f59e0b;"><strong>非正</strong> ($\le 0$, 允许等于0)</td>
+                                            <td style="padding: 0.5rem; font-weight: bold; color: #3b82f6;">稳定</td>
+                                            <td style="padding: 0.5rem;">解在原点附近受控，但不一定收敛到原点。</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 0.5rem; color: #3b82f6;"><strong>严格恒正</strong> ($> 0$, 当 $x \neq 0$ 时)</td>
+                                            <td style="padding: 0.5rem; font-weight: bold; color: #ef4444;">不稳定</td>
+                                            <td style="padding: 0.5rem;">解会随着时间推移发散远离原点。</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title"><span class="icon">⚡</span> 线性与非线性系统的特征根法（李雅普诺夫第一方法）</div>
+                        <div class="card-content">
+                            <p>对于线性系统 $\frac{dx}{dt} = Ax$（其中 $A$ 为常矩阵），可以通过直接求矩阵 $A$ 的特征根 $\lambda$ 的实部来进行判断（<strong>定理 8.1</strong>）：</p>
+                            <ul>
+                                <li><strong>渐近稳定</strong> $\iff$ 全部特征根的实部<strong>都是负的</strong>（全是负的最好！）。</li>
+                                <li><strong>稳定</strong> $\iff$ 全部特征根的实部是<strong>非正的</strong>（允许含实部为0的根），且实部为0的根对应的若尔当块都是<strong>一阶的</strong>。</li>
+                                <li><strong>不稳定</strong> $\iff$ 至少有一个特征根的实部<strong>为正</strong>；或者至少有一个实部为0的根，且其若尔当块高于一阶。</li>
+                            </ul>
+                            
+                            <p class="highlight-text" style="margin-top: 1.5rem;">非线性系统的近似判断（定理 8.2 & 8.3）</p>
+                            <p>对于非线性系统，可以通过求其<strong>线性化方程（雅可比矩阵在原点的值）</strong>的特征根来判断原非线性系统的零解稳定性：</p>
+                            <div class="note">
+                                <strong>核心结论：</strong>只要线性化矩阵 $A$ 的特征根满足“全是负实部”或“至少有一个正实部”这两个强条件之一，非线性系统的稳定性就完全由它决定！<br><br>
+                                <ul>
+                                    <li>若 $A$ 的全部特征根都有负实部 $\implies$ 原非线性系统的零解是<strong>渐近稳定</strong>的。</li>
+                                    <li>若 $A$ 的特征根中至少有一个正实部 $\implies$ 原非线性系统的零解是<strong>不稳定</strong>的。</li>
+                                </ul>
+                                <em>（注：如果出现实部为0的根，且没有正实部根，此时无法用线性化方程判断，必须用上面提到的李雅普诺夫直接法。）</em>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 9. 易错点与避坑记录 -->
             <section id="mistakes">
-                <h2 class="section-header">8. 易错点与避坑记录</h2>
+                <h2 class="section-header">9. 易错点与避坑记录</h2>
                 <div class="card-grid">
                     
                     <div class="card">
