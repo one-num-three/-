@@ -320,7 +320,9 @@
                 <li><a href="#existence">3. 解的存在唯一性</a></li>
                 <li><a href="#maclaurin">4. 常用麦克劳林级数</a></li>
                 <li><a href="#systems">5. 线性微分方程组</a></li>
-                <li><a href="#mistakes">6. 易错点与避坑记录</a></li>
+                <li><a href="#power-series">6. 幂级数解法</a></li>
+                <li><a href="#laplace">7. 拉普拉斯变换</a></li>
+                <li><a href="#mistakes">8. 易错点与避坑记录</a></li>
             </ul>
         </aside>
 
@@ -590,9 +592,144 @@
                 </div>
             </section>
 
-            <!-- 6. 易错点与避坑记录 -->
+            <!-- 6. 幂级数解法 -->
+            <section id="power-series">
+                <h2 class="section-header">6. 幂级数解法</h2>
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="card-title"><span class="icon">📝</span> 幂级数解法核心思想</div>
+                        <div class="card-content">
+                            <p>对于形式为 $\frac{dy}{dx} = f(x,y)$ 的微分方程，若无法直接求出解析解，可假设其在 $x_0$ 点处解析，即解可以展开为无穷幂级数：</p>
+                            <div class="math-block">
+                                $$ y = \sum_{n=0}^\infty c_n (x - x_0)^n, \quad |x - x_0| < \rho $$
+                            </div>
+                            <br>
+                            <p class="highlight-text">求解步骤与例题演示</p>
+                            <p>以 $\frac{dy}{dx} = e^x$，且 $y(0) = 1$ 为例，通常在 $x_0 = 0$ 处展开（即麦克劳林级数形式）：</p>
+                            <ul>
+                                <li><strong>1. 设解的形式：</strong> 假设 $y = \sum_{n=0}^\infty c_n x^n$</li>
+                                <li><strong>2. 展开已知项：</strong> 利用泰勒级数将非齐次项展开，例如 $e^x = \sum_{n=0}^\infty \frac{x^n}{n!}$。</li>
+                                <li><strong>3. 求导并代入原方程：</strong> 
+                                    <div class="math-block" style="margin: 0.5rem 0;">$$ \frac{dy}{dx} = \sum_{n=1}^\infty n c_n x^{n-1} $$</div>
+                                    将其代入原方程 $\frac{dy}{dx} = e^x$，建立等式：
+                                    <div class="math-block" style="margin: 0.5rem 0;">$$ \sum_{n=1}^\infty n c_n x^{n-1} = \sum_{n=0}^\infty \frac{x^n}{n!} $$</div>
+                                </li>
+                                <li><strong>4. 比较系数求 $C_n$：</strong> 调整求和符号的下标使得 $x$ 的同次幂对齐，比较等式两边同次幂的系数，再结合初始条件 $c_0 = y(0) = 1$，即可递推出所有的级数系数 $c_n$。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7. 拉普拉斯变换 -->
+            <section id="laplace">
+                <h2 class="section-header">7. 拉普拉斯变换及其应用</h2>
+                <div class="card-grid">
+                    
+                    <div class="card">
+                        <div class="card-title"><span class="icon">🔄</span> 基本变换与定理</div>
+                        <div class="card-content">
+                            <p class="highlight-text">一、导数变换（最核心）</p>
+                            <ul>
+                                <li>一阶导数：$\mathcal{L}[y'(t)] = sY(s) - y(0)$</li>
+                                <li>二阶导数：$\mathcal{L}[y''(t)] = s^2Y(s) - sy(0) - y'(0)$</li>
+                                <li>$n$阶导数：$\mathcal{L}[y^{(n)}(t)] = s^nY(s) - s^{n-1}y(0) - \dots - y^{(n-1)}(0)$</li>
+                            </ul>
+                            <br>
+                            <p class="highlight-text">二、积分变换</p>
+                            <ul>
+                                <li>积分：$\mathcal{L}\left[\int_0^t y(\tau)d\tau\right] = \frac{1}{s}Y(s)$</li>
+                            </ul>
+                            <br>
+                            <p class="highlight-text">四、两大位移性质（做题高频）</p>
+                            <ul>
+                                <li><strong>1. 复频域位移（指数平移）：</strong> $\mathcal{L}[e^{at}f(t)] = F(s-a)$</li>
+                                <li><strong>2. 时域延迟：</strong> $\mathcal{L}[f(t-\tau)u(t-\tau)] = e^{-\tau s}F(s)$</li>
+                            </ul>
+                            <br>
+                            <p class="highlight-text">五、尺度变换</p>
+                            <ul>
+                                <li>尺度拉伸：$\mathcal{L}[f(at)] = \frac{1}{a}F\left(\frac{s}{a}\right) \quad (a > 0)$</li>
+                            </ul>
+                            <br>
+                            <p class="highlight-text">六、初值定理 & 终值定理</p>
+                            <ul>
+                                <li><strong>初值定理：</strong> $\lim_{t \to 0^+} f(t) = \lim_{s \to \infty} sF(s)$</li>
+                                <li><strong>终值定理：</strong> $\lim_{t \to +\infty} f(t) = \lim_{s \to 0} sF(s)$</li>
+                            </ul>
+                            <br>
+                            <p class="highlight-text">七、线性性质</p>
+                            <ul>
+                                <li>叠加原理：$\mathcal{L}[af(t) \pm bg(t)] = aF(s) \pm bG(s)$</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title"><span class="icon">📋</span> 常用变换表与解题步骤</div>
+                        <div class="card-content">
+                            <p class="highlight-text">三、基础常用函数变换（必背）</p>
+                            <table style="width: 100%; text-align: left; margin-bottom: 1.5rem; border-collapse: collapse; font-size: 1.1em;">
+                                <thead>
+                                    <tr style="border-bottom: 2px solid var(--border-color);">
+                                        <th style="padding: 0.5rem;">原函数 $f(t)$</th>
+                                        <th style="padding: 0.5rem;">像函数 $F(s) = \mathcal{L}[f(t)]$</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="border-bottom: 1px solid var(--border-color);">
+                                        <td style="padding: 0.5rem;">$1$</td>
+                                        <td style="padding: 0.5rem;">$\frac{1}{s}$</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--border-color);">
+                                        <td style="padding: 0.5rem;">$t$</td>
+                                        <td style="padding: 0.5rem;">$\frac{1}{s^2}$</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--border-color);">
+                                        <td style="padding: 0.5rem;">$t^n$</td>
+                                        <td style="padding: 0.5rem;">$\frac{n!}{s^{n+1}}$</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--border-color);">
+                                        <td style="padding: 0.5rem;">$e^{at}$</td>
+                                        <td style="padding: 0.5rem;">$\frac{1}{s-a}$</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--border-color);">
+                                        <td style="padding: 0.5rem;">$\sin \omega t$</td>
+                                        <td style="padding: 0.5rem;">$\frac{\omega}{s^2 + \omega^2}$</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--border-color);">
+                                        <td style="padding: 0.5rem;">$\cos \omega t$</td>
+                                        <td style="padding: 0.5rem;">$\frac{s}{s^2 + \omega^2}$</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--border-color);">
+                                        <td style="padding: 0.5rem;">$\sinh \omega t$</td>
+                                        <td style="padding: 0.5rem;">$\frac{\omega}{s^2 - \omega^2}$</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 0.5rem;">$\cosh \omega t$</td>
+                                        <td style="padding: 0.5rem;">$\frac{s}{s^2 - \omega^2}$</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <p class="highlight-text">八、微分方程解题固定步骤</p>
+                            <div class="note" style="margin-top: 0.5rem; background: rgba(56, 189, 248, 0.1); border-color: var(--accent-color); color: var(--text-main);">
+                                <ul style="margin-left: 1rem; list-style-type: decimal;">
+                                    <li><strong>1. 变换：</strong> 方程两边同时做拉普拉斯变换 $\mathcal{L}$。</li>
+                                    <li><strong>2. 代入：</strong> 代入已知的初始条件 $y(0), y'(0)$。</li>
+                                    <li><strong>3. 求解：</strong> 将微分方程化为代数方程，解出复频域函数 $Y(s)$。</li>
+                                    <li><strong>4. 逆变换：</strong> 对 $Y(s)$ 做拉普拉斯逆变换 $\mathcal{L}^{-1}$，得到最终的时域解 $y(t)$。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 8. 易错点与避坑记录 -->
             <section id="mistakes">
-                <h2 class="section-header">6. 易错点与避坑记录</h2>
+                <h2 class="section-header">8. 易错点与避坑记录</h2>
                 <div class="card-grid">
                     
                     <div class="card">
