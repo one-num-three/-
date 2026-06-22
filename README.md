@@ -37,5 +37,6 @@
 
 ---
 *👤 作者：可可磨成粉 | SEU 东南大学*  
+*🌐 专属在线地址：[https://seu-link.fit/ode-review/](https://seu-link.fit/ode-review/)*  
 *🐙 GitHub 仓库：[https://github.com/one-num-three/-](https://github.com/one-num-three/-)*  
 *祝期末考试一切顺利！💯*
