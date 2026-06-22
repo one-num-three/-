@@ -614,7 +614,14 @@
                                     将其代入原方程 $\frac{dy}{dx} = e^x$，建立等式：
                                     <div class="math-block" style="margin: 0.5rem 0;">$$ \sum_{n=1}^\infty n c_n x^{n-1} = \sum_{n=0}^\infty \frac{x^n}{n!} $$</div>
                                 </li>
-                                <li><strong>4. 比较系数求 $C_n$：</strong> 调整求和符号的下标使得 $x$ 的同次幂对齐，比较等式两边同次幂的系数，再结合初始条件 $c_0 = y(0) = 1$，即可递推出所有的级数系数 $c_n$。</li>
+                                <li><strong>4. 比较系数求 $c_n$（详细推导）：</strong>
+                                    <br>为了对齐两边的 $x$ 幂次，将左边级数的下标平移。令 $k = n-1$（即 $n = k+1$），当 $n=1$ 时 $k=0$：
+                                    <div class="math-block" style="margin: 0.5rem 0;">$$ \sum_{k=0}^\infty (k+1) c_{k+1} x^k = \sum_{n=0}^\infty \frac{x^n}{n!} $$</div>
+                                    统一下标符号为 $n$，比较两边 $x^n$ 前面的系数，得到递推关系式：
+                                    <div class="math-block" style="margin: 0.5rem 0;">$$ (n+1) c_{n+1} = \frac{1}{n!} \implies c_{n+1} = \frac{1}{(n+1)!} $$</div>
+                                    结合初始条件 $c_0 = y(0) = 1 = \frac{1}{0!}$，我们可以得出通项公式对于所有 $n \ge 0$ 均成立：$c_n = \frac{1}{n!}$。<br>
+                                    <strong>最终得到解析解：</strong> 代回原设解中，得到 $y = \sum_{n=0}^\infty \frac{1}{n!} x^n$，这正是 $e^x$ 的麦克劳林展开式，所以 $y = e^x$。
+                                </li>
                             </ul>
                         </div>
                     </div>
