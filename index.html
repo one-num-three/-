@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>常微分方程期末复习手册 | Differential Equations</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- MathJax for Math Rendering -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                ignoreHtmlClass: 'tex2jax_ignore',
+                processHtmlClass: 'tex2jax_process'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --card-bg: #1e293b; /* 移除高消耗的半透明模糊，使用纯色 */
+            --card-border: #334155;
+            --card-hover-border: #38bdf8;
+            --accent-glow: rgba(56, 189, 248, 0.15);
+            --accent-color: #38bdf8;
+            --gradient-start: #3b82f6;
+            --gradient-end: #8b5cf6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.7;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* 性能优化：使用伪元素固定背景，避免 background-attachment: fixed 导致的严重滚动掉帧 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                radial-gradient(circle at 10% 50%, rgba(59, 130, 246, 0.05), transparent 30%),
+                radial-gradient(circle at 90% 20%, rgba(139, 92, 246, 0.05), transparent 30%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+                padding: 2rem 1.5rem;
+                gap: 2rem;
+            }
+        }
+
+        /* Sidebar & TOC */
+        .sidebar {
+            position: sticky;
+            top: 3rem;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 1.5rem;
+            padding: 2.5rem 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .sidebar p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+        }
+
+        .toc {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .toc a {
+            text-decoration: none;
+            color: var(--text-muted);
+            transition: all 0.2s ease;
+            font-size: 1rem;
+            display: block;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            border: 1px solid transparent;
+        }
+
+        .toc a:hover {
+            color: var(--text-main);
+            background: #334155;
+            transform: translateX(4px);
+        }
+
+        /* Main Content area */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        section {
+            scroll-margin-top: 3rem;
+        }
+
+        .section-header {
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            display: inline-block;
+            position: relative;
+        }
+
+        .section-header::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 40px;
+            height: 4px;
+            background: var(--gradient-start);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        section:hover .section-header::after {
+            width: 100%;
+            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+        }
+
+        /* Cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 1.25rem;
+            padding: 2rem;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            will-change: transform; /* 开启 GPU 加速，减少悬浮动画卡顿 */
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            border-color: var(--card-hover-border);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-title {
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .card-title .icon {
+            color: var(--accent-color);
+            background: #0f172a;
+            padding: 0.4rem;
+            border-radius: 0.5rem;
+            display: inline-flex;
+            border: 1px solid #334155;
+        }
+
+        .card-content {
+            color: var(--text-muted);
+        }
+
+        .card-content p {
+            margin-bottom: 1rem;
+        }
+
+        .card-content ul {
+            list-style: none;
+            margin-left: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .card-content li {
+            margin-bottom: 0.75rem;
+            position: relative;
+            padding-left: 1.75rem;
+        }
+
+        .card-content li::before {
+            content: '✦';
+            position: absolute;
+            left: 0;
+            color: var(--gradient-end);
+            font-size: 0.9em;
+        }
+
+        .math-block {
+            background: #0f172a;
+            padding: 1.25rem;
+            border-radius: 0.75rem;
+            margin: 1.25rem 0;
+            overflow-x: auto;
+            border-left: 4px solid var(--accent-color);
+            color: #e2e8f0;
+            border: 1px solid #334155;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .note {
+            background: rgba(245, 158, 11, 0.1);
+            border-left: 4px solid #f59e0b;
+            padding: 1.25rem;
+            border-radius: 0 0.75rem 0.75rem 0;
+            margin-top: 1.5rem;
+            font-size: 0.95rem;
+            color: #fcd34d;
+        }
+
+        .highlight-text {
+            color: var(--accent-color);
+            font-weight: 500;
+        }
+        
+        strong {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h1>常微分方程</h1>
+            <p>期末突击总览复习笔记</p>
+            <ul class="toc">
+                <li><a href="#basic">1. 基本概念</a></li>
+                <li><a href="#first-order">2. 一阶方程解法</a></li>
+                <li><a href="#existence">3. 解的存在唯一性</a></li>
+                <li><a href="#maclaurin">4. 常用麦克劳林级数</a></li>
+                <li><a href="#systems">5. 线性微分方程组</a></li>
+                <li><a href="#mistakes">6. 易错点与避坑记录</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <!-- 1. 基本概念 -->
+            <section id="basic">
+                <h2 class="section-header">1. 基本概念</h2>
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="card-title">
+                            <span class="icon">📐</span> 导数与几何意义
+                        </div>
+                        <div class="card-content">
+                            <p>微分方程 <strong>$\frac{dy}{dx} = f(x,y)$</strong> 代表了平面上的<strong>斜率</strong>。</p>
+                            <ul>
+                                <li><strong>线素 (Line Element) / 线素场 (Direction Field)</strong>：空间中各点的短线段，其斜率为该点的导数值。</li>
+                                <li><strong>等斜线 (Isocline)</strong>：斜率相等的点的轨迹集合。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. 一阶方程解法 -->
+            <section id="first-order">
+                <h2 class="section-header">2. 一阶方程解法</h2>
+                <div class="card-grid">
+                    
+                    <div class="card">
+                        <div class="card-title"><span class="icon">🎯</span> 恰当方程 (Exact Equation)</div>
+                        <div class="card-content">
+                            <p>形式：<strong>$P(x,y)dx + Q(x,y)dy = 0$</strong></p>
+                            <p>充要条件：连续的一阶偏导数，且满足：</p>
+                            <div class="math-block">
+                                $$ \frac{\partial P(x,y)}{\partial y} \equiv \frac{\partial Q(x,y)}{\partial x} $$
+                            </div>
+                            <p><strong>求解方法：</strong></p>
+                            <ul>
+                                <li>凑微分法</li>
+                                <li>积分法</li>
+                                <li>路径积分法</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title"><span class="icon">✨</span> 积分因子法 (Integrating Factor)</div>
+                        <div class="card-content">
+                            <p>当方程不恰当时，两边同乘积分因子 $\mu(x,y)$ 使其变为恰当方程。</p>
+                            <div class="note">
+                                <strong>注：</strong>我注意到你的笔记中关于积分因子推导的下标和变量有些混淆（例如推导 $\mu(y)$ 时写成了 $G(x)$）。我在此为你修正成了标准形式，以免复习时混淆！
+                            </div>
+                            <ul>
+                                <li><strong>第一类（只与 $y$ 有关）：</strong><br>若 $G(y) = \frac{1}{P(x,y)} \left( \frac{\partial Q}{\partial x} - \frac{\partial P}{\partial y} \right)$ 只与 $y$ 有关，则积分因子 $\mu(y) = e^{\int G(y)dy}$</li>
+                                <li><strong>第二类（只与 $x$ 有关）：</strong><br>若 $G(x) = \frac{1}{Q(x,y)} \left( \frac{\partial P}{\partial y} - \frac{\partial Q}{\partial x} \right)$ 只与 $x$ 有关，则积分因子 $\mu(x) = e^{\int G(x)dx}$</li>
+                                <li><strong>齐次方程的积分因子：</strong><br>若 $P(x,y)dx + Q(x,y)dy = 0$ 为齐次方程，则 $\mu(x,y) = \frac{1}{xP(x,y) + yQ(x,y)}$</li>
+                                <li><strong>分组求积分因子法：</strong><br>
+                                当方程可以分成两组时：$(P_1 dx + Q_1 dy) + (P_2 dx + Q_2 dy) = 0$<br>
+                                <ul style="margin-top: 0.5rem;">
+                                    <li>若已知第一组的积分因子为 $u_1$，对应的通积分为 $\Phi_1(x,y)$，则第一组更一般的积分因子形式为 $u_1 \cdot g_1(\Phi_1)$。</li>
+                                    <li>若第二组的积分因子为 $u_2$，对应的通积分为 $\Phi_2(x,y)$，则第二组更一般的积分因子形式为 $u_2 \cdot g_2(\Phi_2)$。</li>
+                                    <li>寻找合适的函数 $g_1$ 和 $g_2$，强制让这两部分的积分因子相等：
+                                        <div class="math-block">$$ \mu = u_1 \cdot g_1(\Phi_1) = u_2 \cdot g_2(\Phi_2) $$</div>
+                                        解出的 $\mu$ 即为整个方程的积分因子。
+                                    </li>
+                                </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title"><span class="icon">📈</span> 一阶线性方程 & 常数变易法</div>
+                        <div class="card-content">
+                            <p>方程通解公式：</p>
+                            <div class="math-block">
+                                $$ y = e^{-\int p(x)dx} \left( \int e^{\int p(x)dx} \cdot q(x) dx + C \right) $$
+                            </div>
+                            <p><strong>常数变易法步骤：</strong></p>
+                            <ul>
+                                <li>① 求齐次方程对应的通解</li>
+                                <li>② 将常数项 $C$ 变为关于 $x$ 的函数 $C(x)$ 代入，求得非齐次特解</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title"><span class="icon">🔄</span> 可化为齐次的方程</div>
+                        <div class="card-content">
+                            <p>形式：<strong>$\frac{dy}{dx} = f\left(\frac{ax+by+c}{mx+ny+l}\right)$</strong></p>
+                            <p>通过初等变换使之变为齐次方程：</p>
+                            <ul>
+                                <li><strong>相交情况：</strong> 解直线方程组 $ax+by+c=0$ 和 $mx+ny+l=0$ 得到交点 $(\alpha, \beta)$。作代换 $u = x - \alpha$，$v = y - \beta$。</li>
+                                <li><strong>平行情况：</strong> 当 $\frac{a}{m} = \frac{b}{n} = \lambda$ 时，令 $v = ax+by$。<br>此时方程变为 $\frac{dy}{dx} = f\left(\frac{ax+by+c}{\lambda ax + \lambda by + l}\right) = f\left(\frac{v+c}{\lambda v+l}\right)$，进而得到 $\frac{dv}{dx} = a + b \cdot f\left(\frac{v+c}{\lambda v+l}\right)$。</li>
+                            </ul>
+                            <div class="note">
+                                <strong>举例：</strong> $y' = \frac{y-x+5}{2y-x-4}$
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title"><span class="icon">🧩</span> 伯努利方程 & 黎卡提方程</div>
+                        <div class="card-content">
+                            <p class="highlight-text">伯努利方程 (Bernoulli Equation)</p>
+                            <ul>
+                                <li><strong>形式：</strong> $\frac{dy}{dx} + p(x)y = q(x)y^n$</li>
+                                <li><strong>解法：</strong> 同除以 $y^n$，令 $z = y^{1-n}$，即可转化为一阶线性方程求解。</li>
+                            </ul>
+                            <br>
+                            <p class="highlight-text">黎卡提方程 (Riccati Equation)</p>
+                            <div class="math-block">
+                                $$ \frac{dy}{dx} = P(x)y^2 + Q(x)y + R(x) $$
+                            </div>
+                            <ul>
+                                <li><strong>解法 I：</strong> 已知一个特解 $\varphi(x)$，设通解为 $y = u + \varphi(x)$。代入原式后，可得到关于 $u$ 的伯努利方程，进而求解。</li>
+                                <li><strong>解法 II：</strong> 针对特殊形式 $\frac{dy}{dx} + ay^2 = bx^m$。<br>
+                                当 $m=0, m=-2, m=\frac{4k}{2k+1}, m=\frac{-4k}{2k-1}$ 时方程可解。<br>
+                                （注：当 $m=-2$ 时，通过令 $z = xy$ 求解）</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 3. 解的存在唯一性 -->
+            <section id="existence">
+                <h2 class="section-header">3. 解的存在唯一性定理</h2>
+                <div class="card-grid">
+                    
+                    <div class="card">
+                        <div class="card-title"><span class="icon">⚖️</span> 利普希茨条件 (Lipschitz)</div>
+                        <div class="card-content">
+                            <p>$f(x,y)$ 连续，且满足局部利普希茨条件：</p>
+                            <div class="math-block">
+                                $$ |f(x,y_1) - f(x,y_2)| \le L|y_1 - y_2| $$
+                            </div>
+                            <p><strong>验证是否满足的两种方法：</strong></p>
+                            <ul>
+                                <li>1. 利用原始定义验证。</li>
+                                <li>2. 若 $f(x,y)$ 对 $y$ 的偏导数 $\frac{\partial f}{\partial y}$ <strong>在闭区间上连续</strong> 或者 <strong>在开区间上有界</strong>，则可推导出局部利普希茨条件。<br>
+                                <em>例：函数 $y^\alpha$，其导数为 $\alpha y^{\alpha-1}$。在 $|y-0| \le b$ （当区间避开 $y=0$ 奇点时），其偏导有界，从而满足利普希茨条件。</em></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title"><span class="icon">🛡️</span> Osgood 条件 & 皮亚诺定理</div>
+                        <div class="card-content">
+                            <ul>
+                                <li><strong>Osgood 条件（唯一性条件）：</strong><br>
+                                <!-- 转义了小于号，防止被 HTML 解析器吞掉 -->
+                                $|f(x,y_1) - f(x,y_2)| &lt; F(|y_1 - y_2|)$ 且 $\int_0 \frac{dr}{F(r)} = +\infty$</li>
+                                <li><strong>皮亚诺存在定理 (Peano)：</strong><br>
+                                若函数 $f(x,y)$ 在矩形区域内连续，则在此矩形区域内必定存在解（但不一定唯一）。</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title"><span class="icon">🔁</span> 皮卡迭代法 (Picard Iteration)</div>
+                        <div class="card-content">
+                            <p>皮卡定理保证了解的存在与唯一。构造如下皮卡迭代序列，不断逼近精确解：</p>
+                            <div class="math-block">
+                                $$ \begin{cases} \varphi_m(x) = y_0 + \int_{x_0}^x f(t, \varphi_{m-1}(t)) dt \\ \varphi_0(x) = y_0 \end{cases} $$
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title"><span class="icon">🚀</span> 解的延展与存在区间</div>
+                        <div class="card-content">
+                            <ul>
+                                <li>探讨解的延展性。</li>
+                                <li>求解方程解的存在区间（例如求出显式形式：$\ln\left(\frac{y-1}{y}\right) = x - x_0$ 等来判断定义域）。</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 4. 常用麦克劳林级数 -->
+            <section id="maclaurin">
+                <h2 class="section-header">4. 常用麦克劳林级数</h2>
+                <div class="card-grid">
+                    
+                    <div class="card">
+                        <div class="card-title"><span class="icon">📝</span> 常见函数的幂级数展开</div>
+                        <div class="card-content">
+                            <p>以下是一些在解微分方程（例如：级数解法）时经常用到的函数在 $x=0$ 处的泰勒展开式，即麦克劳林级数：</p>
+                            <div class="math-block">
+                                $$ e^x = \sum_{n=0}^{\infty} \frac{x^n}{n!} \quad (-\infty &lt; x &lt; +\infty) $$
+                                <br>
+                                $$ \sin x = \sum_{n=0}^{\infty} \frac{(-1)^n}{(2n+1)!} x^{2n+1} \quad (-\infty &lt; x &lt; +\infty) $$
+                                <br>
+                                $$ \cos x = \sum_{n=0}^{\infty} \frac{(-1)^n}{(2n)!} x^{2n} \quad (-\infty &lt; x &lt; +\infty) $$
+                                <br>
+                                $$ \ln(1+x) = \sum_{n=1}^{\infty} \frac{(-1)^{n-1}}{n} x^n \quad (-1 &lt; x \le 1) $$
+                                <br>
+                                $$ \frac{1}{1-x} = \sum_{n=0}^{\infty} x^n \quad (-1 &lt; x &lt; 1) $$
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 5. 线性微分方程组 -->
+            <section id="systems">
+                <h2 class="section-header">5. 线性微分方程组</h2>
+                <div class="card-grid">
+                    
+                    <div class="card">
+                        <div class="card-title"><span class="icon">🔗</span> 齐次与非齐次线性方程组</div>
+                        <div class="card-content">
+                            <p class="highlight-text">一、常系数齐次线性方程组（特征值法）</p>
+                            <p>对于形式为 $\frac{dy}{dx} = Ay$ 的方程组（其中 $A$ 为常数矩阵），最标准、最常用的解法就是<strong>特征值法</strong>。这也正是你最后这张笔记中完整展示的解题过程：</p>
+                            <ul style="margin-top: 0.5rem;">
+                                <li><strong>1. 求特征根（Eigenvalues）：</strong> 计算特征方程 $|A - \lambda I| = 0$ ，解出特征根 $\lambda_1, \lambda_2, \dots$。<br>
+                                <span style="color: var(--text-muted); font-size: 0.9em;">（正如你笔记中的例题，化简矩阵求出了三个互不相同的实数根 $\lambda = 0, 1, -1$）</span></li>
+                                <li><strong>2. 求特征向量（Eigenvectors）：</strong> 将每个特征根 $\lambda_i$ 逐一代入线性方程组 $(A - \lambda_i I)v = 0$，通过矩阵初等行变换求出对应的基础解系，即特征向量 $v_i$。</li>
+                                <li><strong>3. 构造通解：</strong> 每一个特征根与特征向量的组合都会产生一个特解 $y_i = e^{\lambda_i x} v_i$。通解就是这些特解的线性组合：
+                                    <div class="math-block">
+                                        $$ y = C_1 e^{\lambda_1 x} v_1 + C_2 e^{\lambda_2 x} v_2 + \dots + C_n e^{\lambda_n x} v_n $$
+                                    </div>
+                                </li>
+                            </ul>
+                            <div class="note" style="margin-top: 0.5rem; margin-bottom: 2rem;">
+                                <strong>💡 进阶考点防坑提示：</strong><br>
+                                你笔记中展示的是最好算的<strong>“互异实数根”</strong>情况。<br>
+                                如果考题中出现<strong>复数根</strong> $\alpha \pm \beta i$，根据欧拉公式解会表现为带有指数 $e^{\alpha x}$ 和三角函数 $\sin(\beta x)$、$\cos(\beta x)$ 的组合；<br>
+                                如果出现<strong>重根</strong>（且特征向量不足），则解中不仅有 $e^{\lambda x}$，还会出现乘以自变量 $x$ 的项（类似于一阶线性方程中的常数变易）。
+                            </div>
+                            
+                            <p class="highlight-text">二、一般非齐次线性方程组（常数变易法）</p>
+                            <p>利用常数变易法，非齐次方程组的通解公式为：</p>
+                            <div class="math-block">
+                                $$ y = \Phi(x) \left( C + \int_{x_0}^x \Phi^{-1}(s) f(s) ds \right) $$
+                            </div>
+                            <p>其中 $\Phi(x)$ 为<strong>基解矩阵</strong>。具体的计算步骤如下：</p>
+                            <ul>
+                                <li><strong>① 得到基解矩阵：</strong> 求出对应的齐次方程组的基础解系，将各个列向量横向排布构成矩阵 $\Phi(x)$。</li>
+                                <li><strong>② 求逆矩阵：</strong> 计算 $\Phi^{-1}(x)$。对于二阶矩阵，可利用伴随矩阵的代数余子式进行计算：
+                                    <div class="math-block" style="margin-top: 0.5rem; margin-bottom: 0.5rem; padding: 0.75rem;">
+                                        $$ A^{-1} = \frac{1}{|A|} \begin{pmatrix} A_{11} & A_{21} \\ A_{12} & A_{22} \end{pmatrix} $$
+                                    </div>
+                                    <em>（注：$A_{ij}$ 为代数余子式，且在伴随矩阵中需进行转置排布）</em>
+                                </li>
+                                <li><strong>③ 验证独立性：</strong> 取特定值代入基解矩阵（或者直接计算），验证其行列式 $|\Phi(x)| \neq 0$（即伏朗斯基行列式不为零）。</li>
+                                <li><strong>④ 矩阵相乘与逐元积分（代入通解公式）：</strong> 
+                                    <br>积分部分的具体操作是针对<strong>矩阵与向量的乘积</strong>进行的，拆解细节如下：
+                                    <div class="note" style="margin-top: 0.5rem; margin-bottom: 0.5rem; background: rgba(56, 189, 248, 0.1); border-color: var(--accent-color); color: var(--text-main);">
+                                        <strong>第一步（先乘）：</strong> 逆矩阵 $\Phi^{-1}(s)$ 乘以非齐次项列向量 $f(s)$，会计算出一个新的<strong>列向量</strong>。<br>
+                                        <strong>第二步（后积）：</strong> 对这个新列向量中的<strong>每一个元素（分量）</strong>分别独立地求积分 $\int \dots ds$。<br>
+                                        <strong>第三步（加常数）：</strong> 积分得到的列向量与任意常数向量 $C = (C_1, C_2)^T$ 相加。<br>
+                                        <strong>第四步（外层乘）：</strong> 将组合好的列向量左乘基解矩阵 $\Phi(x)$，展开即为方程组的最终解 $y$。
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 6. 易错点与避坑记录 -->
+            <section id="mistakes">
+                <h2 class="section-header">6. 易错点与避坑记录</h2>
+                <div class="card-grid">
+                    
+                    <div class="card">
+                        <div class="card-title"><span class="icon">🚨</span> 分离变量时的符号与对数常数陷阱</div>
+                        <div class="card-content">
+                            <p>在攻克了微分方程求导和降阶的难关后，很容易在最后的基础代数分离变量上栽跟头。以下是一个典型错例剖析：</p>
+                            <br>
+                            <p class="highlight-text">错误 1：移项未变号</p>
+                            <p>当处理因式 $p + x\frac{dp}{dx} = 0$ 时，移项<strong>必须变号</strong>。如果错写成 $p = x\frac{dp}{dx}$，会丢失一个致命的负号。正确的分离变量结果是：</p>
+                            <div class="math-block">
+                                $$ p = -x\frac{dp}{dx} \quad \implies \quad \frac{dp}{p} = -\frac{dx}{x} $$
+                            </div>
+                            
+                            <p class="highlight-text">错误 2：对数方程化简时的“常数相加”错觉</p>
+                            <p>对正确等式两边积分得到 $\ln|p| = -\ln|x| + C_1$ 后，为了解出 $p$，两边取指数时必须严格遵循指数运算法则 $e^{a+b} = e^a \cdot e^b$。<strong>常数项在取指数后会变成乘积因子</strong>，绝不能简单地平移为加减常数。</p>
+                            <div class="math-block">
+                                $$ \ln|p| = \ln\left|x^{-1}\right| + C_1 $$
+                                $$ |p| = e^{\ln\left|\frac{1}{x}\right| + C_1} = e^{\ln\left|\frac{1}{x}\right|} \cdot e^{C_1} = \left|\frac{1}{x}\right| e^{C_1} $$
+                                $$ p = \pm e^{C_1} \frac{1}{x} = \frac{C}{x} $$
+                            </div>
+                            <p>即便按照漏掉负号的错误式子 $\ln|p| = \ln|x| + C_1$，去对数后结果也应该是 $p = Cx$，而千万不能错误地得出 $p = x + C$。</p>
+
+                            <div class="note">
+                                <strong>💡 防御性检验建议：回取代入法</strong><br>
+                                解出 $p$ 的表达式后，花 10 秒钟代回原式检验。<br>
+                                如果你解出了 $p = x + C$，代入得 $(x+C) + x(1) \neq 0$，立刻就能发现错误。<br>
+                                将正确解 $p = \frac{C}{x}$ 代入，得 $\frac{C}{x} + x\left(-\frac{C}{x^2}\right) = 0$，等式完美成立。这种快速代入可以 100% 拦截基础代数错误。
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // 简单的侧边栏导航高亮效果
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.toc a');
+            
+            // 节流处理 scroll 事件，进一步减少卡顿
+            let isScrolling = false;
+            
+            window.addEventListener('scroll', () => {
+                if (!isScrolling) {
+                    window.requestAnimationFrame(() => {
+                        let current = '';
+                        sections.forEach(section => {
+                            const sectionTop = section.offsetTop;
+                            if (scrollY >= sectionTop - 150) {
+                                current = section.getAttribute('id');
+                            }
+                        });
+
+                        navLinks.forEach(link => {
+                            link.style.color = 'var(--text-muted)';
+                            if (link.getAttribute('href').includes(current)) {
+                                link.style.color = 'var(--accent-color)';
+                            }
+                        });
+                        isScrolling = false;
+                    });
+                    isScrolling = true;
+                }
+            }, { passive: true }); // 使用 passive 提升滚动性能
+        });
+    </script>
+</body>
+</html>
