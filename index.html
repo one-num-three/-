@@ -99,62 +99,7 @@
             transform: scale(0.95);
         }
 
-        @media (max-width: 1024px) {
-            .container {
-                display: flex;
-                flex-direction: column;
-                padding: 1rem 1rem;
-                gap: 2rem;
-            }
-            .sidebar {
-                position: fixed;
-                top: 0;
-                left: -100%;
-                width: 280px;
-                height: 100vh;
-                z-index: 1000;
-                border-radius: 0;
-                transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                overflow-y: auto;
-                box-shadow: 2px 0 20px rgba(0,0,0,0.5);
-                padding: 2rem 1.5rem;
-            }
-            .sidebar.active {
-                left: 0;
-            }
-            .main-content {
-                order: 1; /* 正文在前面 */
-            }
-            .section-header {
-                font-size: 1.8rem;
-            }
-            .card {
-                padding: 1.25rem;
-            }
-            .card-title {
-                font-size: 1.2rem;
-            }
-            .mobile-menu-btn {
-                display: flex;
-            }
-            .overlay {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100vw;
-                height: 100vh;
-                background: rgba(0,0,0,0.5);
-                backdrop-filter: blur(4px);
-                z-index: 999;
-                opacity: 0;
-                transition: opacity 0.3s ease;
-            }
-            .overlay.active {
-                display: block;
-                opacity: 1;
-            }
-        }
+
 
         /* Sidebar & TOC */
         .sidebar {
@@ -377,6 +322,63 @@
         }
         ::-webkit-scrollbar-thumb:hover {
             background: #475569;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                display: flex;
+                flex-direction: column;
+                padding: 1rem 1rem;
+                gap: 2rem;
+            }
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                width: 280px;
+                height: 100vh;
+                z-index: 1000;
+                border-radius: 0;
+                transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                overflow-y: auto;
+                box-shadow: 2px 0 20px rgba(0,0,0,0.5);
+                padding: 2rem 1.5rem;
+            }
+            .sidebar.active {
+                left: 0;
+            }
+            .main-content {
+                order: 1;
+            }
+            .section-header {
+                font-size: 1.8rem;
+            }
+            .card {
+                padding: 1.25rem;
+            }
+            .card-title {
+                font-size: 1.2rem;
+            }
+            .mobile-menu-btn {
+                display: flex;
+            }
+            .overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background: rgba(0,0,0,0.5);
+                backdrop-filter: blur(4px);
+                z-index: 999;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+            .overlay.active {
+                display: block;
+                opacity: 1;
+            }
         }
     </style>
 </head>
