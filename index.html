@@ -78,7 +78,8 @@
 
         @media (max-width: 1024px) {
             .container {
-                grid-template-columns: 1fr;
+                display: flex;
+                flex-direction: column;
                 padding: 1rem 1rem;
                 gap: 2rem;
             }
@@ -86,6 +87,10 @@
                 position: static;
                 padding: 1.5rem;
                 border-radius: 1rem;
+                order: 2; /* 移动端放在最下面 */
+            }
+            .main-content {
+                order: 1; /* 移动端正文放在最上面 */
             }
             .section-header {
                 font-size: 1.8rem;
