@@ -76,6 +76,29 @@
             align-items: start;
         }
 
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1001;
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        .mobile-menu-btn:active {
+            transform: scale(0.95);
+        }
+
         @media (max-width: 1024px) {
             .container {
                 display: flex;
@@ -131,29 +154,6 @@
                 display: block;
                 opacity: 1;
             }
-        }
-
-        .mobile-menu-btn {
-            display: none;
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            z-index: 1001;
-            width: 3.5rem;
-            height: 3.5rem;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-            color: white;
-            border: none;
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-        }
-        .mobile-menu-btn:active {
-            transform: scale(0.95);
         }
 
         /* Sidebar & TOC */
